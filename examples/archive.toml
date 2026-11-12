@@ -1,0 +1,17 @@
+project_id = "my-gcp-project"
+source_bucket = "my-data-exports"
+archive_bucket = "my-data-archive"        # create with default class ARCHIVE, or enable Autoclass
+prefixes = ["tables/"]
+min_age_days = 395                        # 13 months
+batch_depth = 2                           # one job per tables/<table>/ folder
+max_objects_per_batch = 500000
+max_bytes_per_batch = 2199023255552       # 2 TiB
+delete_source_after_transfer = false      # turn on only after a verified dry run
+target_storage_class = "ARCHIVE"
+ledger_path = "archive-ledger.sqlite"
+
+[prices_per_gb_month]
+STANDARD = 0.020
+NEARLINE = 0.010
+COLDLINE = 0.004
+ARCHIVE = 0.0012

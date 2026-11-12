@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gcs-archiver"
+version = "0.1.0"
+description = "Plan, run, track and verify age-based archival of Google Cloud Storage data with Storage Transfer Service."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Anirudh Vadera" }]
+dependencies = []
+
+[project.optional-dependencies]
+gcp = ["google-cloud-storage>=2.14", "google-cloud-storage-transfer>=1.11"]
+dev = ["pytest>=8", "ruff>=0.5"]
+
+[project.scripts]
+gcs-archiver = "gcs_archiver.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
