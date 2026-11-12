@@ -1,7 +1,7 @@
 import os
 import tempfile
 import unittest
-from datetime import date, datetime, timedelta, timezone
+from datetime import UTC, date, datetime, timedelta
 
 from gcs_archiver import runner
 from gcs_archiver.config import ArchiveConfig
@@ -13,7 +13,7 @@ from gcs_archiver.planner import batch_prefix, cutoff_for, eligible, plan_batche
 from gcs_archiver.storage import InMemoryBackend
 from gcs_archiver.transfer import build_job_spec
 
-NOW = datetime(2026, 6, 1, tzinfo=timezone.utc)
+NOW = datetime(2026, 6, 1, tzinfo=UTC)
 
 
 def obj(name, days_old, size=GB, cls="NEARLINE"):
@@ -21,7 +21,7 @@ def obj(name, days_old, size=GB, cls="NEARLINE"):
 
 
 def cfg(**kw):
-    base = dict(project_id="p", source_bucket="src", archive_bucket="arc", prefixes=["t/"], batch_depth=2)
+    base = {"project_id": "p", "source_bucket": "src", "archive_bucket": "arc", "prefixes": ["t/"], "batch_depth": 2}
     return ArchiveConfig(**{**base, **kw})
 
 
@@ -78,7 +78,7 @@ class TransferSpecTests(unittest.TestCase):
 
 class EndToEndTests(unittest.TestCase):
     def setUp(self):
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         old = [ObjectInfo(f"t/{t}/dt={d}/p.parquet", GB, now - timedelta(days=400 + d), "NEARLINE")
                for t in ("a", "b", "c") for d in range(3)]
         fresh = [ObjectInfo("t/a/dt=new/p.parquet", GB, now - timedelta(days=5), "STANDARD")]

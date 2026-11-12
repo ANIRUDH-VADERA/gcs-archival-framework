@@ -13,7 +13,7 @@ class StorageBackend(Protocol):
 
 class GcsBackend:
     def __init__(self, project_id: str) -> None:
-        from google.cloud import storage  # noqa: PLC0415 - optional dependency
+        from google.cloud import storage  # optional dependency
 
         self._client = storage.Client(project=project_id)
 

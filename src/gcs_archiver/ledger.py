@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import sqlite3
 from contextlib import closing
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS batches (
@@ -36,7 +36,7 @@ class Ledger:
     def upsert(self, key: str, seq: int, **fields) -> None:
         if unknown := set(fields) - COLUMNS:
             raise ValueError(f"unknown ledger columns: {unknown}")
-        fields["updated_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        fields["updated_at"] = datetime.now(UTC).isoformat(timespec="seconds")
         existing = self.get(key, seq)
         with self._db:
             if existing is None:

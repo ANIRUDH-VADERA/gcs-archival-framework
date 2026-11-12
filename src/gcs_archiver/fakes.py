@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import random
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from .models import ObjectInfo
 from .storage import InMemoryBackend
@@ -22,7 +22,7 @@ class FakeTransferClient:
         cond = ts["objectConditions"]
         prefixes = cond.get("includePrefixes", [""])
         min_age = timedelta(seconds=int(cond["minTimeElapsedSinceLastModification"].rstrip("s")))
-        cutoff = datetime.now(timezone.utc) - min_age
+        cutoff = datetime.now(UTC) - min_age
         name = f"transferJobs/{len(self.jobs) + 1}"
         if any(p in self.fail_prefixes for p in prefixes):
             self.jobs[name] = "FAILED"
@@ -40,7 +40,7 @@ class FakeTransferClient:
 def sample_bucket(seed: int = 7, now: datetime | None = None) -> list[ObjectInfo]:
     """A realistic-looking ledger export layout: tables/<name>/dt=YYYY-MM-DD/part-N.parquet."""
     rng = random.Random(seed)
-    now = now or datetime.now(timezone.utc)
+    now = now or datetime.now(UTC)
     objects = []
     for table in ("journal_lines", "postings", "reconciliation"):
         for days_ago in range(0, 900, 7):

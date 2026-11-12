@@ -65,7 +65,7 @@ def cmd_plan(args: argparse.Namespace) -> int:
 
 
 def cmd_run(args: argparse.Namespace) -> int:
-    from .transfer import StsTransferClient  # noqa: PLC0415 - needs the gcp extra
+    from .transfer import StsTransferClient  # lazy: needs the gcp extra
 
     cfg, ledger = _open(args)
     plan = runner.make_plan(cfg, GcsBackend(cfg.project_id))
@@ -79,7 +79,7 @@ def cmd_run(args: argparse.Namespace) -> int:
 
 
 def cmd_status(args: argparse.Namespace) -> int:
-    from .transfer import StsTransferClient  # noqa: PLC0415
+    from .transfer import StsTransferClient
 
     cfg, ledger = _open(args)
     print(runner.refresh(StsTransferClient(cfg.project_id), ledger))

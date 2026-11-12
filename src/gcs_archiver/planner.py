@@ -3,13 +3,13 @@ from __future__ import annotations
 
 from collections import defaultdict
 from collections.abc import Iterable
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from .models import Batch, ObjectInfo
 
 
 def cutoff_for(min_age_days: int, now: datetime | None = None) -> datetime:
-    return (now or datetime.now(timezone.utc)) - timedelta(days=min_age_days)
+    return (now or datetime.now(UTC)) - timedelta(days=min_age_days)
 
 
 def eligible(objects: Iterable[ObjectInfo], cutoff: datetime, target_class: str) -> list[ObjectInfo]:

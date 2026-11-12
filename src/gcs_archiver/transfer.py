@@ -1,7 +1,7 @@
 """Builds and submits Storage Transfer Service jobs, one per batch."""
 from __future__ import annotations
 
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 from typing import Protocol
 
 from .config import ArchiveConfig
@@ -14,7 +14,7 @@ def build_job_spec(batch: Batch, cfg: ArchiveConfig, today: date | None = None) 
     The age condition is enforced again by the service itself (minTimeElapsedSinceLastModification),
     so an object modified between planning and execution is never moved.
     """
-    run_day = today or datetime.now(timezone.utc).date()
+    run_day = today or datetime.now(UTC).date()
     day = {"year": run_day.year, "month": run_day.month, "day": run_day.day}
     conditions: dict = {"minTimeElapsedSinceLastModification": f"{cfg.min_age_days * 86400}s"}
     if batch.prefix:
@@ -46,7 +46,7 @@ class StsTransferClient:
     """Thin wrapper over google-cloud-storage-transfer. Imported lazily."""
 
     def __init__(self, project_id: str) -> None:
-        from google.cloud import storage_transfer  # noqa: PLC0415 - optional dependency
+        from google.cloud import storage_transfer  # optional dependency
 
         self._st = storage_transfer
         self._project_id = project_id
